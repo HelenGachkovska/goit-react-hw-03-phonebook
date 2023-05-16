@@ -13,9 +13,21 @@ export class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevPros, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   hanlerSubmitForm = props => {
     const { name, number } = props;
@@ -73,7 +85,10 @@ export class App extends Component {
         >
           Contacts
         </h2>
-        <ContactFilter value={this.state.filter} onChange={this.handlerFilterInput} />
+        <ContactFilter
+          value={this.state.filter}
+          onChange={this.handlerFilterInput}
+        />
         <ContactList
           contacts={filteredOutArray}
           onDelete={this.handlerDeleteItem}
